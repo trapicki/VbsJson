@@ -1,7 +1,8 @@
 Class VbsJson
     'Author: Demon
     'Date: 2012/5/3
-    'Website: http://demon.tw
+    'Website: https://demon.tw/my-work/vbs-json.html
+    'License: CC BY-NC-SA 2.5 CN
     Private Whitespace, NumberRegex, StringChunk
     Private b, f, r, n, t
 
