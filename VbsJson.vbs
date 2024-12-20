@@ -89,6 +89,8 @@ Class VbsJson
                 buffer.Add buffer.Count, "]"
             Case vbObject
                 If TypeName(obj) = "Dictionary" Then
+                    Dim key
+                    
                     firstItem = True
                     buffer.Add buffer.Count, "{"
                     For Each key In obj
