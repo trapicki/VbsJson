@@ -3,6 +3,7 @@ Class VbsJson
     'Date: 2012/5/3
     'Website: https://demon.tw/my-work/vbs-json.html
     'License: CC BY-NC-SA 2.5 CN
+    'Modified version from https://github.com/trapicki/VbsJson
     Private Whitespace, BackSpace, NumberRegex, StringChunk
     
     Private Sub Class_Initialize
