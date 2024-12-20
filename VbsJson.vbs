@@ -99,7 +99,7 @@ Class VbsJson
                     Next
                     buffer.Add buffer.Count, "}"
                 Else
-                    Err.Raise 8732,,"None dictionary object"
+                    Err.Raise 8732,,"Expected dictionary object, got: " & TypeName(obj)
                 End If
             Case Else
                 buffer.Add buffer.Count, """" & CStr(obj) & """"
@@ -176,7 +176,8 @@ Class VbsJson
             Exit Function
         End If
         
-        Err.Raise 8732,,"No JSON object could be ScanOnced"
+        Err.Raise 8732,,"No JSON object could be ScanOnced at position " & index & _
+            "(>>" & Mid(str, index - 2, 5) & "<<)"
     End Function
 
     Private Function ParseObject(ByRef str, ByRef index)
@@ -189,7 +190,8 @@ Class VbsJson
             index = index + 1
             Exit Function
         ElseIf character <> """" Then
-            Err.Raise 8732,,"Expecting property name"
+            Err.Raise 8732,,"Expecting property name at position " & index & _
+                "(>>" & Mid(str, index - 2, 5) & "<<)"
         End If
 
         index = index + 1
@@ -199,7 +201,8 @@ Class VbsJson
 
             index = SkipWhitespace(str, index)
             If Mid(str, index, 1) <> ":" Then
-                Err.Raise 8732,,"Expecting : delimiter"
+                Err.Raise 8732,,"Expecting "":"" delimiter at position " & index & _
+                    "(>>" & Mid(str, index - 2, 5) & "<<)"
             End If
 
             index = SkipWhitespace(str, index + 1)
@@ -215,13 +218,15 @@ Class VbsJson
             If character = "}" Then
                 Exit Do
             ElseIf character <> "," Then
-                Err.Raise 8732,,"Expecting , delimiter"
+                Err.Raise 8732,,"Expecting "," delimiter at position " & index & _
+                    "(>>" & Mid(str, index - 2, 5) & "<<)"
             End If
 
             index = SkipWhitespace(str, index + 1)
             character = Mid(str, index, 1)
             If character <> """" Then
-                Err.Raise 8732,,"Expecting property name"
+                Err.Raise 8732,,"Expecting property name at position " & index & _
+                    "(>>" & Mid(str, index - 2, 5) & "<<)"
             End If
 
             index = index + 1
@@ -256,7 +261,8 @@ Class VbsJson
             If character = "]" Then
                 Exit Do
             ElseIf character <> "," Then
-                Err.Raise 8732,,"Expecting , delimiter"
+                Err.Raise 8732,,"Expecting "","" delimiter at position " & index & _
+                    "(>>" & Mid(str, index - 2, 5) & "<<)"
             End If
 
             index = index + 1
@@ -273,7 +279,8 @@ Class VbsJson
         Do
             Set matchedString = StringChunk.Execute(Mid(str, index))
             If matchedString.Count = 0 Then
-                Err.Raise 8732,,"Unterminated string starting"
+                Err.Raise 8732,,"Unterminated string at position " & index & _
+                    "(>>" & Mid(str, index - 2, 5) & "<<)"
             End If
             
             content = matchedString(0).Submatches(0)
@@ -287,7 +294,8 @@ Class VbsJson
             If terminator = """" Then
                 Exit Do
             ElseIf terminator <> "\" Then
-                Err.Raise 8732,,"Invalid control character"
+                Err.Raise 8732,,"Invalid control character """ & terminator & "at position " & index & _
+                    "(>>" & Mid(str, index - 2, 5) & "<<)"
             End If
             
             escapedCharacter = Mid(str, index, 1)
@@ -302,7 +310,8 @@ Class VbsJson
                     Case "n"  char = vbNl
                     Case "r"  char = vbCr
                     Case "t"  char = vbTab
-                    Case Else Err.Raise 8732,,"Invalid escape"
+                    Case Else Err.Raise 8732,,"Invalid escape character """ & escapedCharacter & "at position " & index & _
+                                  "(>>" & Mid(str, index - 2, 5) & "<<)"
                 End Select
                 index = index + 1
             Else
